@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app_name }} - AI Lab Project</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            },
+            dark: {
+              900: '#0b0f19',
+              800: '#111827',
+              700: '#1f2937',
+              600: '#374151',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0b0f19] text-gray-100 min-h-screen flex flex-col font-sans selection:bg-teal-500 selection:text-white">
+
+  <!-- Top Navbar -->
+  <header class="border-b border-gray-800 bg-gray-900/60 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-500/20">
+          <i data-lucide="cpu" class="w-6 h-6 text-dark-900 font-bold"></i>
+        </div>
+        <div>
+          <span class="text-lg font-bold bg-gradient-to-r from-teal-400 via-cyan-300 to-indigo-300 bg-clip-text text-transparent">
+            {{ app_name }}
+          </span>
+          <span class="ml-2 text-xs px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/30">
+            v{{ version }}
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-2 text-xs bg-gray-800/80 px-3 py-1.5 rounded-full border border-gray-700">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-gray-300">API Status:</span>
+          <span id="health-badge" class="text-emerald-400 font-medium">Checking...</span>
+        </div>
+        <div class="text-xs px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span>Dr. Mohammed Al-Dhobaie Lab</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden pt-8 pb-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
+        Intelligent Text Analytics &amp; Vibe Studio
+      </h1>
+      <p class="text-gray-400 text-sm max-w-2xl mx-auto">
+        A production-grade Python web application demonstrating <strong>Linux CLI</strong>, <strong>Git/GitHub workflow</strong>, <strong>Clean Architecture</strong>, and <strong>Vibe Coding</strong>.
+      </p>
+
+      <!-- Navigation Tabs -->
+      <div class="flex justify-center mt-6">
+        <nav class="flex space-x-2 bg-gray-900/90 p-1.5 rounded-2xl border border-gray-800 shadow-inner">
+          <button id="tab-btn-analyzer" onclick="switchTab('analyzer')" class="tab-btn active px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Text &amp; Sentiment Analyzer
+          </button>
+          <button id="tab-btn-prompt" onclick="switchTab('prompt')" class="tab-btn px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 text-gray-400 hover:text-white">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Vibe Prompt Studio
+          </button>
+          <button id="tab-btn-course" onclick="switchTab('course')" class="tab-btn px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 text-gray-400 hover:text-white">
+            <i data-lucide="book-open" class="w-4 h-4"></i> Course Concepts &amp; Guide
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+    <!-- TAB 1: TEXT ANALYZER -->
+    <section id="tab-analyzer" class="tab-content block">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Input Column (Left) -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="bg-gray-900/70 border border-gray-800 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
+            <div class="flex items-center justify-between mb-3">
+              <label for="input-text" class="text-sm font-semibold text-gray-200 flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4 text-teal-400"></i> Enter or Paste Text
+              </label>
+              <div class="flex gap-2">
+                <button onclick="loadSample('pos')" class="text-xs bg-gray-800 hover:bg-gray-700 text-teal-300 px-2.5 py-1 rounded-lg border border-gray-700 transition">
+                  Positive Sample
+                </button>
+                <button onclick="loadSample('neg')" class="text-xs bg-gray-800 hover:bg-gray-700 text-rose-300 px-2.5 py-1 rounded-lg border border-gray-700 transition">
+                  Issue Sample
+                </button>
+                <button onclick="loadSample('ar')" class="text-xs bg-gray-800 hover:bg-gray-700 text-indigo-300 px-2.5 py-1 rounded-lg border border-gray-700 transition">
+                  عربي
+                </button>
+              </div>
+            </div>
+
+            <textarea id="input-text" rows="9" class="w-full bg-gray-950/80 border border-gray-800 rounded-xl p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition resize-y" placeholder="Type or paste any English or Arabic paragraph here..."></textarea>
+
+            <div class="mt-4 flex items-center justify-between">
+              <button onclick="clearText()" class="text-xs text-gray-400 hover:text-gray-200 flex items-center gap-1 transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Clear
+              </button>
+              <button id="btn-analyze" onclick="performAnalysis()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-dark-900 font-semibold text-sm shadow-lg shadow-teal-500/25 transition transform active:scale-95 flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                <span id="btn-analyze-text">Analyze Now</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center">
+              <p class="text-[10px] text-gray-400 uppercase tracking-wider">Words</p>
+              <p id="stat-words" class="text-xl font-bold text-white mt-1">0</p>
+            </div>
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center">
+              <p class="text-[10px] text-gray-400 uppercase tracking-wider">Chars</p>
+              <p id="stat-chars" class="text-xl font-bold text-teal-400 mt-1">0</p>
+            </div>
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center">
+              <p class="text-[10px] text-gray-400 uppercase tracking-wider">Sentences</p>
+              <p id="stat-sentences" class="text-xl font-bold text-indigo-400 mt-1">0</p>
+            </div>
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center">
+              <p class="text-[10px] text-gray-400 uppercase tracking-wider">Read Time</p>
+              <p id="stat-readtime" class="text-xl font-bold text-cyan-400 mt-1">0m</p>
+            </div>
+            <div class="col-span-2 sm:col-span-1 bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center">
+              <p class="text-[10px] text-gray-400 uppercase tracking-wider">Ease Score</p>
+              <p id="stat-ease" class="text-xl font-bold text-emerald-400 mt-1">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Column (Right) -->
+        <div class="lg:col-span-6 space-y-4">
+          <!-- Sentiment Card -->
+          <div class="bg-gray-900/70 border border-gray-800 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold text-gray-200 flex items-center gap-2">
+                <i data-lucide="smile" class="w-4 h-4 text-cyan-400"></i> Sentiment Analysis
+              </h3>
+              <span id="sentiment-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-800 text-gray-300 border border-gray-700">
+                Awaiting input
+              </span>
+            </div>
+
+            <div class="flex items-center space-x-4 my-2">
+              <div id="sentiment-emoji" class="text-4xl p-2 bg-gray-800/80 rounded-2xl border border-gray-700 flex items-center justify-center">
+                😐
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>Negative (-1.0)</span>
+                  <span id="sentiment-score" class="font-semibold text-white">0.00</span>
+                  <span>Positive (+1.0)</span>
+                </div>
+                <div class="w-full bg-gray-950 rounded-full h-3 overflow-hidden border border-gray-800 p-0.5">
+                  <div id="sentiment-bar" class="h-full rounded-full bg-teal-500 transition-all duration-500" style="width: 50%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Matched Keywords Details -->
+            <div id="sentiment-details" class="mt-4 pt-3 border-t border-gray-800/80 grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <span class="text-emerald-400 font-medium flex items-center gap-1">
+                  <i data-lucide="plus-circle" class="w-3 h-3"></i> Positive Cues:
+                </span>
+                <div id="pos-keywords-list" class="flex flex-wrap gap-1 mt-1 text-gray-400">
+                  <span class="text-gray-500 italic">None</span>
+                </div>
+              </div>
+              <div>
+                <span class="text-rose-400 font-medium flex items-center gap-1">
+                  <i data-lucide="minus-circle" class="w-3 h-3"></i> Negative Cues:
+                </span>
+                <div id="neg-keywords-list" class="flex flex-wrap gap-1 mt-1 text-gray-400">
+                  <span class="text-gray-500 italic">None</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary & Top Keywords -->
+          <div class="bg-gray-900/70 border border-gray-800 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-sm font-semibold text-gray-200 flex items-center gap-2">
+                <i data-lucide="align-left" class="w-4 h-4 text-teal-400"></i> Extractive Summary
+              </h3>
+              <button onclick="copySummary()" class="text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i> Copy
+              </button>
+            </div>
+            <p id="summary-text" class="text-sm text-gray-300 bg-gray-950/60 p-3 rounded-xl border border-gray-800/80 min-h-[70px] leading-relaxed italic">
+              Summary will appear here after clicking "Analyze Now".
+            </p>
+
+            <div class="mt-4 pt-3 border-t border-gray-800/80">
+              <span class="text-xs font-semibold text-gray-300 uppercase tracking-wider block mb-2">
+                Key Topics &amp; Frequency:
+              </span>
+              <div id="keywords-container" class="flex flex-wrap gap-1.5">
+                <span class="text-xs text-gray-500 italic">No keywords extracted yet</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: VIBE PROMPT STUDIO -->
+    <section id="tab-prompt" class="tab-content hidden">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <div class="bg-gradient-to-br from-gray-900 to-gray-900/90 border border-teal-500/20 rounded-2xl p-6 shadow-2xl">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/30">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-white">Vibe Coding &amp; Prompt Engineering Studio</h2>
+              <p class="text-xs text-gray-400">Turn raw ideas into production-ready prompts structured for LLMs.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs text-gray-300 font-medium block mb-1">Target Domain</label>
+              <select id="prompt-domain" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-gray-200 focus:border-teal-500 focus:outline-none">
+                <option value="code">Software Engineering &amp; Clean Code</option>
+                <option value="writing">Technical Documentation &amp; Content</option>
+                <option value="data">Data Science &amp; AI Analysis</option>
+                <option value="general">General Problem Solving</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs text-gray-300 font-medium block mb-1">Target Audience</label>
+              <input type="text" id="prompt-audience" value="Senior Engineers &amp; Reviewers" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-gray-200 focus:border-teal-500 focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="text-xs text-gray-300 font-medium block mb-1">Your Casual Idea / Vibe Prompt</label>
+            <textarea id="prompt-input" rows="4" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm text-gray-200 focus:border-teal-500 focus:outline-none" placeholder="e.g.: build a python web api to analyze text sentiment with clean code and linux scripts"></textarea>
+          </div>
+
+          <div class="flex justify-end">
+            <button onclick="optimizePrompt()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-dark-900 font-semibold text-sm shadow-lg shadow-teal-500/25 flex items-center gap-2 transition transform active:scale-95">
+              <i data-lucide="wand-2" class="w-4 h-4"></i> Generate Engineered Prompt
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Result -->
+        <div id="optimized-result-card" class="hidden bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-teal-400 flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> Structured LLM Ready Prompt
+            </h3>
+            <button onclick="copyOptimizedPrompt()" class="text-xs bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 px-3 py-1.5 rounded-lg border border-teal-500/30 flex items-center gap-1.5 transition">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Prompt
+            </button>
+          </div>
+          <pre id="optimized-text" class="bg-gray-950 p-4 rounded-xl text-xs sm:text-sm text-gray-200 font-mono overflow-x-auto whitespace-pre-wrap border border-gray-800/80 leading-relaxed"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: COURSE CONCEPTS & ARCHITECTURE -->
+    <section id="tab-course" class="tab-content hidden">
+      <div class="max-w-5xl mx-auto space-y-6">
+
+        <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl">
+          <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+            <i data-lucide="layers" class="w-5 h-5 text-teal-400"></i> Course Concepts &amp; Architecture Map
+          </h2>
+          <p class="text-sm text-gray-400 mb-6">
+            Designed for <strong>Dr. Mohammed Al-Dhobaie's AI Lab Course</strong>, covering all 4 core pillars:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Pillar 1: Linux Commands -->
+            <div class="bg-gray-950/70 border border-gray-800 p-4 rounded-xl hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm mb-2">
+                <i data-lucide="terminal" class="w-4 h-4"></i> 1. Linux Commands (أوامر لينكس)
+              </div>
+              <ul class="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                <li><code class="text-teal-300 bg-gray-900 px-1 py-0.5 rounded">chmod +x scripts/*.sh</code> (File permissions)</li>
+                <li><code class="text-teal-300 bg-gray-900 px-1 py-0.5 rounded">curl -X POST http://...</code> (API testing)</li>
+                <li><code class="text-teal-300 bg-gray-900 px-1 py-0.5 rounded">ps aux | grep python</code> (Process monitoring)</li>
+                <li><code class="text-teal-300 bg-gray-900 px-1 py-0.5 rounded">mkdir, ls -la, cat, grep</code> (Filesystem &amp; inspect)</li>
+                <li>Executable bash scripts: <code class="text-gray-300">setup.sh</code>, <code class="text-gray-300">run.sh</code>, <code class="text-gray-300">health_check.sh</code></li>
+              </ul>
+            </div>
+
+            <!-- Pillar 2: Git / GitHub -->
+            <div class="bg-gray-950/70 border border-gray-800 p-4 rounded-xl hover:border-indigo-500/40 transition">
+              <div class="flex items-center gap-2 text-indigo-400 font-bold text-sm mb-2">
+                <i data-lucide="git-branch" class="w-4 h-4"></i> 2. Git &amp; GitHub (أوامر Git)
+              </div>
+              <ul class="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                <li><code class="text-indigo-300 bg-gray-900 px-1 py-0.5 rounded">git init</code> &amp; clean <code class="text-indigo-300">.gitignore</code></li>
+                <li>Feature branch workflow: <code class="text-indigo-300 bg-gray-900 px-1 py-0.5 rounded">git checkout -b feature/...</code></li>
+                <li>Conventional commits: <code class="text-indigo-300 bg-gray-900 px-1 py-0.5 rounded">feat:</code>, <code class="text-indigo-300">docs:</code>, <code class="text-indigo-300">test:</code></li>
+                <li>Remote repository synchronization: <code class="text-indigo-300 bg-gray-900 px-1 py-0.5 rounded">git push -u origin main</code></li>
+                <li>Public GitHub Repository ready for Dr. Mohammed Al-Dhobaie.</li>
+              </ul>
+            </div>
+
+            <!-- Pillar 3: Clean Coding -->
+            <div class="bg-gray-950/70 border border-gray-800 p-4 rounded-xl hover:border-emerald-500/40 transition">
+              <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm mb-2">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> 3. Clean Coding (كود نظيف ومهيكل)
+              </div>
+              <ul class="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                <li><strong>Application Factory Pattern</strong> (<code class="text-emerald-300">create_app()</code>)</li>
+                <li><strong>Single Responsibility Principle (SRP)</strong>: Separate routes, services, models</li>
+                <li><strong>PEP 8 Compliance &amp; Strict Type Hints</strong> (<code class="text-emerald-300">typing</code>, <code class="text-emerald-300">dataclasses</code>)</li>
+                <li><strong>Automated Unit Testing</strong> with <code class="text-emerald-300">pytest</code></li>
+                <li>Comprehensive docstrings and modular architecture.</li>
+              </ul>
+            </div>
+
+            <!-- Pillar 4: Vibe Coding -->
+            <div class="bg-gray-950/70 border border-gray-800 p-4 rounded-xl hover:border-amber-500/40 transition">
+              <div class="flex items-center gap-2 text-amber-400 font-bold text-sm mb-2">
+                <i data-lucide="zap" class="w-4 h-4"></i> 4. Vibe Coding (البرمجة السريعة والذكية)
+              </div>
+              <ul class="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                <li>Rapid AI-assisted prototyping with real-time feedback loops.</li>
+                <li>Interactive Web Studio: Text Analytics + AI Prompt Engine.</li>
+                <li>Modern responsive dark-mode UI with Tailwind CSS &amp; Glassmorphism.</li>
+                <li>Seamless human-AI collaboration workflow.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-800/80 bg-gray-900/40 py-6 text-center text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>AI Lab Assignment &bull; Submitted to: <strong>Dr. Mohammed Al-Dhobaie</strong></p>
+      <p>Built with Python, Flask, Clean Architecture &amp; Vibe Coding</p>
+    </div>
+  </footer>
+
+  <script src="/static/js/main.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
